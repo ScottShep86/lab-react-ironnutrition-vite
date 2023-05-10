@@ -1,34 +1,55 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
+import foods from "./foods.json";
+import { Row, Divider, Button } from "antd";
+import FoodBox from "./components/FoodBox";
+import AddFoodForm from "./components/AddFoodForm";
+import Search from "./components/Search";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [foodList, setFoodList] = useState(foods);
+
+  const deleteFood = (currentFood) => {
+    let filteredFood = foodList.filter((currentElement) => {
+      return currentElement.name !== currentFood.name;
+    });
+    setFoodList(filteredFood);
+  };
+
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {/* Display Add Food component here */}
+      <AddFoodForm setFoodList={setFoodList} />
+
+      <Button> Hide Form / Add New Food </Button>
+
+      {/* Display Search component here */}
+      <Search foodList={foodList} setFoodList={setFoodList} />
+
+      <Divider>Food List</Divider>
+
+      <Row style={{ width: "100%", justifyContent: "center" }}>
+        {/* Render the list of Food Box components here */}
+        {foodList.map((food) => {
+          return (
+            <FoodBox key={food.name} food={food} deleteFood={deleteFood} />
+          );
+        })}
+      </Row>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
+
+/* <h1>Food List</h1>
+      {foodList.map((food) => {
+      return(
+      <div key={food.id}>
+        <p> {food.name} </p>
+        <img src={food.image} alt={food.name} width={200} />
+      
+      </div>
+      );
+    })} */
